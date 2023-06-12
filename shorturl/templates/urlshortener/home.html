@@ -1,0 +1,120 @@
+{% extends 'urlshortener/base.html' %} 
+{% block styles %}
+<style>
+  .btnn {
+  background: #120fc2;
+  background-image: -webkit-linear-gradient(top, #120fc2, #392bb8);
+  background-image: -moz-linear-gradient(top, #120fc2, #392bb8);
+  background-image: -ms-linear-gradient(top, #120fc2, #392bb8);
+  background-image: -o-linear-gradient(top, #120fc2, #392bb8);
+  background-image: linear-gradient(to bottom, #120fc2, #392bb8);
+  -webkit-border-radius: 10;
+  -moz-border-radius: 10;
+  border-radius: 10px;
+  border:none;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.btnn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="container mt-5 bg-white"  style="padding:20px; border-radius:20px">
+  <div class="card mt-5">
+    <div class="card-header text-center py-3 text-bold">
+      <h1>URL Shortner</i></h1>
+    </div>
+    <div class="px-3 py-4">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="row g-1">
+          <div class="col-10">{{form.long_url}}</div>
+          <div class="col-2">
+            <button class="btnn btn-lg w-100" type="submit">
+              Shorten
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% if errors %}
+  <div class="alert alert-danger mt-4" role="alert">
+    <p>{{errors}}</p>
+  </div>
+  {% endif %}
+
+  {% if new_url %}
+
+  <div class="mx-auto text-center mt-5">
+    <h2 class="text-primary">Your shortened Url Details are given below</h2>
+  </div>
+  <table class="table table-bordered">
+  <thead class="bg-success text-white">
+    <tr>
+      <th scope="col">Long Url Link</th>
+      <th scope="col">Short URL Code</th>
+      <th scope="col">Short URL Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td scope="row">{{long_url}}</td>
+      <td scope="row">{{short_code}}</td>
+      <td scope="row" ><a id="textToCopy" target="_blank" href="{{new_url}}"> {{new_url}}</a>
+      <button class='btn btn-primary btn-sm mx-3' id="copyButton" onclick="copyText()">Copy</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  {% endif %}
+</div>
+{% endblock body %}
+    {% block copy%}
+
+      <script>
+    function copyText() {
+      /* Get the text content to be copied */
+      var textToCopy = document.getElementById("textToCopy").innerText;
+      
+      /* Create a temporary textarea element */
+      var tempTextarea = document.createElement("textarea");
+      
+      /* Set the value of the textarea to the text to be copied */
+      tempTextarea.value = textToCopy;
+      
+      /* Append the textarea element to the document */
+      document.body.appendChild(tempTextarea);
+      
+      /* Select the text within the textarea */
+      tempTextarea.select();
+      
+      /* Copy the selected text to the clipboard */
+      document.execCommand("copy");
+      
+      /* Remove the temporary textarea element */
+      document.body.removeChild(tempTextarea);
+      
+      /* Provide visual feedback to the user */
+      var copyButton = document.getElementById("copyButton");
+      copyButton.innerText = "Copied!";
+      setTimeout(function() {
+        copyButton.innerText = "Copy";
+      }, 2000); // Reset the button text after 2 seconds
+    }
+  </script>
+
+    {% endblock%}
